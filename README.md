@@ -22,5 +22,8 @@ Part 1 and 2: Dataset [Link](http://bit.ly/CarreFourDataset).
 Part 3: Dataset [Link](http://bit.ly/SupermarketDatasetII).
 Part 4: Dataset [Link](http://bit.ly/CarreFourSalesDataset).
 
+## Tools
+* R
+* Rstudio
 ## Author
 Moffat Kirui
