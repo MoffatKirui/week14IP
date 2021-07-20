@@ -1,0 +1,56 @@
+---
+title: 'Part 4: Anomaly Detection'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Reading the data
+
+```{r}
+library(anomalize)
+library(tidyverse)
+library(readr)
+library(tibbletime)
+library(dplyr)
+cfs<- read_csv("http://bit.ly/CarreFourSalesDataset")
+```
+```{r}
+# Verifying the object's class
+class(cfs)
+```
+```{r}
+# checking dimensions
+dim(cfs)
+```
+```{r}
+# Previewing our first 5 entries
+head(cfs,5) 
+```
+```{r}
+# Previewing our last 5 entries
+tail(cfs,5) 
+```
+```{r}
+# checking datatypes
+str(cfs)
+```
+```{r}
+# Grouping by server and converting to tibbletime
+sales <- cfs %>% group_by(Date) %>%
+   mutate(Date = as.Date (Date, format="%m/%d/%Y")) %>% as_tbl_time(index = Date)
+```
+```{r}
+# performing anomaly detection on the sales 
+sales_anomalized <- sales %>% summarise(Orders = sum(Sales)) %>%
+    time_decompose(Orders) %>%
+    anomalize(remainder, alpha = 0.25, max_anoms = 0.2) %>%
+    time_recompose() %>%
+    plot_anomalies(time_recomposed = TRUE) +
+    ggtitle("alpha = 0.05, max_anoms = 0.2")
+    
+sales_anomalized
+```
+there was one anomaly at the end of january and several in feb and march. the anomalies were not far from the normal data thus can not be a source of major concern.
